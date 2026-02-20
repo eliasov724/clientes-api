@@ -1,0 +1,33 @@
+services:
+
+  db:
+    image: postgres:15
+    container_name: clientes-postgres
+    environment:
+      POSTGRES_DB: clientesdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: clientes-api
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: clientes-frontend
+    depends_on:
+      - app
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
